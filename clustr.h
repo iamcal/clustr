@@ -16,7 +16,7 @@ ASIDE FROM CGAL.
 #ifndef CLUSTR_H
 #define CLUSTR_H
 
-#define VERSION     "0.1"
+#define VERSION     "0.2"
 #define AUTHOR      "Schuyler Erle <schuyler@nocat.net>"
 #define COPYRIGHT   "(c) 2007-2008 Yahoo!, Inc."
 
@@ -173,6 +173,7 @@ namespace Clustr {
         void push_back (const Point &p);
         iterator begin (void) { return vertices_begin(); };
         iterator end (void) { return vertices_end(); };
+        bool encloses (const Point &p) { bounded_side(p) == CGAL::ON_BOUNDED_SIDE; };
     };
 
     typedef std::vector<Ring> Polygon_base;

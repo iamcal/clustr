@@ -62,10 +62,18 @@ recommend starting with a value of 0.001.
 
 Bugs
 ----
-At present, clustr does not handle polygon holes correctly.
+Clustr does not use an exceptionally sophisticated algorithm for extracting
+polygons from the generated alpha shape, with the result that on occasion
+improper or self-intersecting polygons get generated. This can confuse GIS
+programs that expect better behaved data sets, and ought to be fixed someday.
+
+Also, the total count of points input is written to every shape record, which
+will be wrong if there are multiple components for a given input tag. This
+could be fixed by testing inclusion of each point after the polygons are
+constructed, which would lengthen runtime. Cost/benefit? Not sure.
 
 License
-----
+-------
 
 Copyright (c) 2007-2008 Yahoo! Inc.
 

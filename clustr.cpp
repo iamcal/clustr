@@ -20,6 +20,7 @@ ASIDE FROM CGAL.
 #include <list>
 #include <stdexcept>
 #include <cmath>
+#include <algorithm>
 
 #include <unistd.h> 
 #include "clustr.h"
@@ -78,11 +79,55 @@ bool extract_alpha_component (Mesh::component &c, Polygon &poly, bool verbose)
     return true;
 }
 
+bool compare_polygon_sizes (const Polygon &a, const Polygon &b) {
+    return a.size() < b.size();
+}
+
+void attach_interior_rings (vector<Polygon> &input, vector<Polygon> &output, bool verbose = false) {
+    unsigned int count = 0;
+
+    /* First, sort the polygons by area. This guarantees that smaller polygons
+     * will wind up inside larger polygons. */
+    sort(input.begin(), input.end(), compare_polygon_sizes);
+
+    for (vector<Polygon>::iterator it = input.begin(); it != input.end(); it++) {
+        bool is_interior_ring = false;
+
+        for (vector<Polygon>::iterator comp = it + 1; comp != input.end(); comp++) {
+            /* check if the first point in the first ring of *it is inside the outer ring
+             * of *comp. If it is, then we assume that the entire polygon *it is actually
+             * inside *comp.
+             *
+             * Note that *comp needs to be a simple polygon -- it *should* be but sometimes
+             * the polygons that come out of the alpha shape self-intersect at a point.
+             * Not sure what to do about this. */
+            if ((*comp)[0].is_simple() && (*comp)[0].encloses((*it)[0][0])) {
+                for (Polygon::iterator ring = it->begin(); ring != it->end(); ring++) {
+                    // this is actually going to get double-interior rings backwards,
+                    // but fixing that means making the logic in
+                    // Polygon::push_back a lot more sophisticated...
+                    comp->push_back(*ring); 
+                }
+                is_interior_ring = true;
+                count++;
+                break;
+            }
+        }
+
+        if (!is_interior_ring)
+            output.push_back(*it);
+    }
+
+    if (verbose && count)
+        cerr << count << " interior rings attached." << endl;
+}
+
 void construct_alpha_shape (Config &config, Shapefile &shape,
                             vector<Point> &pts, string text)
 {
     coord_type alpha = config.alpha;
     Mesh mesh(pts.begin(), pts.end(), alpha);
+    vector<Polygon> polygons, output;
 
     if (alpha == 0) {
         if (config.verbose) cerr << "Computing optimal alpha... ";
@@ -95,14 +140,17 @@ void construct_alpha_shape (Config &config, Shapefile &shape,
         cerr << mesh.number_of_solid_components() <<
               " component(s) found for alpha value " << alpha << "." << endl;
 
-    for (Mesh::component c = mesh.components_begin();
-         c != mesh.components_end(); c++) {
+    for (Mesh::component c = mesh.components_begin(); c != mesh.components_end(); c++) {
         Polygon poly;
-        if (extract_alpha_component(c, poly, config.verbose)) {
-            if (config.verbose)
-                cerr << "Writing polygon for tag '" << text << "'." << endl;
-            write_polygon_to_shapefile(shape, poly, text, pts.size());
-        }
+        if (extract_alpha_component(c, poly, config.verbose))
+            polygons.push_back(poly);
+    }
+
+    attach_interior_rings(polygons, output, config.verbose);
+
+    if (config.verbose) cerr << "Writing " << output.size() << " polygons to shapefile." << endl;
+    for (vector<Polygon>::iterator poly = output.begin(); poly != output.end(); poly++) {
+        write_polygon_to_shapefile(shape, *poly, text, pts.size()); // FIXME: size is broken
     }
 }
 
