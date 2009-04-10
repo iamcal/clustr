@@ -1,7 +1,7 @@
 clustr - construct polygons from tagged points
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 written by Schuyler Erle <schuyler@nocat.net>
-(c) 2007-2008 Yahoo! Inc.
+(c) 2007-2009 Yahoo! Inc.
 
 Overview
 --------
@@ -75,7 +75,7 @@ constructed, which would lengthen runtime. Cost/benefit? Not sure.
 License
 -------
 
-Copyright (c) 2007-2008 Yahoo! Inc.
+Copyright (c) 2007-2009 Yahoo! Inc.
 
 All rights reserved.  This code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License (GPL),

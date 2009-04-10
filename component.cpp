@@ -1,5 +1,5 @@
 /*
-Clustr.  Copyright (c) 2007-2008 Yahoo! Inc.
+Clustr.  Copyright (c) 2007-2009 Yahoo! Inc.
 
 All rights reserved.  This code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License (GPL),

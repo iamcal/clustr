@@ -1,5 +1,5 @@
 /*
-Clustr.  Copyright (c) 2007-2008 Yahoo! Inc.
+Clustr.  Copyright (c) 2007-2009 Yahoo! Inc.
 
 All rights reserved.  This code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License (GPL),
@@ -282,7 +282,8 @@ int main(int argc, char **argv) {
             previous = tag;
         }
         if (tag != previous) {
-            construct_output(config, *shape, pts, tag);
+            construct_output(config, *shape, pts, previous);
+            previous = tag;
             pts.clear();
         }
         pts.push_back(pt);

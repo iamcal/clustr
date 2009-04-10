@@ -1,5 +1,5 @@
 /*
-Clustr.  Copyright (c) 2007-2008 Yahoo! Inc.
+Clustr.  Copyright (c) 2007-2009 Yahoo! Inc.
 
 All rights reserved.  This code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License (GPL),
@@ -16,9 +16,9 @@ ASIDE FROM CGAL.
 #ifndef CLUSTR_H
 #define CLUSTR_H
 
-#define VERSION     "0.2"
+#define VERSION     "0.21"
 #define AUTHOR      "Schuyler Erle <schuyler@nocat.net>"
-#define COPYRIGHT   "(c) 2007-2008 Yahoo!, Inc."
+#define COPYRIGHT   "(c) 2007-2009 Yahoo!, Inc."
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Filtered_kernel.h>
